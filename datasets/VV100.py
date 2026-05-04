@@ -12,9 +12,9 @@ from torch.utils.data import DataLoader
 from torch.autograd import Variable
 from torchvision import transforms
 
-import MyDataset
+from datasets import MyDataset
+from models import model
 import MyLoss
-import model
 import utils
 from utils import Logger, time_to_str
 
@@ -22,8 +22,8 @@ from utils import Logger, time_to_str
 # Datasets supported as targets/sources; UCLA-rPPG is known to be noisy.
 #
 TARGET_DOMAIN = {
-    'VIPL': ['V4V', 'PURE', 'BUAA', 'UBFC', 'MR-NIRP'], # , 'MR-NIRP' ,'VV100', 'UCLA-rPPG', 'Phys', "MMPD"
-    'V4V': ['VIPL', 'PURE', 'BUAA', 'UBFC', 'MR-NIRP']
+    'VIPL': ['V4V', 'PURE', 'BUAA', 'UBFC', 'VV100'], # , 'MR-NIRP' ,'VV100', 'UCLA-rPPG', 'Phys', "MMPD"
+    'V4V': ['VIPL', 'PURE', 'BUAA', 'UBFC', 'VV100']
 }
 
 FILE_NAME = {
@@ -121,7 +121,7 @@ def main():
                 + str(args.k5)+ '_' + str(args.k6)+ '_|' + str(args.k7)+ '_' + str(args.k8)+ '_|' \
                 + str(args.k9)+ '_' + str(args.k10)
     log = Logger()
-    log_path = os.path.join('./Result_log', f"MR{rPPGNet_name}_{para_name}log.txt")
+    log_path = os.path.join('./Result_log', f"VV100{rPPGNet_name}_{para_name}log.txt")
     log.open(log_path, mode='a')
     log.write(f"\n----------------------------------------------- [START {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}] {'-' * 51}\n\n")
 

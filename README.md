@@ -1,8 +1,10 @@
-# RhythmGaussian: 4D Gaussian Representation for Remote Physiological Measurement
+# RhythmGuassian: Repurposing Generalizable Gaussian Model for Remote Physiological Measurement
 
-Official implementation of **RhythmGaussian**, which addresses the entanglement between motion / illumination interference and physiological signals in remote photoplethysmography (rPPG) by explicitly decoupling 4D chromatic and geometric components with a Generalizable Gaussian Model (GGM).
+**ICCV 2025** &nbsp;|&nbsp; [Paper (CVF Open Access)](https://openaccess.thecvf.com/content/ICCV2025/papers/Lu_RhythmGuassian_Repurposing_Generalizable_Gaussian_Model_For_Remote_Physiological_Measurement_ICCV_2025_paper.pdf)
 
-> **Highlight.** The 4D Gaussian representation makes it possible to model geometry, motion, and chroma jointly under a single rendering formulation — without requiring real camera intrinsics/extrinsics, which the rPPG datasets do not provide.
+Official implementation of **RhythmGuassian**, which addresses the entanglement between motion / illumination interference and physiological signals in remote photoplethysmography (rPPG) by explicitly decoupling 4D chromatic and geometric components with a Generalizable Gaussian Model (GGM).
+
+> **Highlight.** The 4D Gaussian representation models geometry, motion, and chroma jointly under a single rendering formulation — without requiring real camera intrinsics/extrinsics, which the rPPG datasets do not provide.
 
 ---
 
@@ -79,14 +81,21 @@ conda activate rhythmgs
 # PyTorch (CUDA 11.8 example; pick a build matching your GPU/driver)
 pip install torch==2.1.0 torchvision --index-url https://download.pytorch.org/whl/cu118
 
-pip install opencv-python scipy pandas pillow
+pip install -r requirements.txt
 
-# Differentiable 3D Gaussian rasterizer (the original Inria implementation)
-git clone --recursive https://github.com/graphdeco-inria/gaussian-splatting.git
-pip install ./gaussian-splatting/submodules/diff-gaussian-rasterization
+# Differentiable Gaussian rasterizer — RhythmGuassian uses 2D Gaussian Splatting:
+git clone --recursive https://github.com/hbb1/2d-gaussian-splatting.git
+pip install ./2d-gaussian-splatting/submodules/diff-surfel-rasterization
 ```
 
-Tested with PyTorch 2.1 / CUDA 11.8 on a single A100. Any GPU that runs `diff_gaussian_rasterization` should work.
+> **Note on the import name.** ``models/gs.py`` imports the rasterizer as
+> ``diff_gaussian_rasterization``. If your build of 2DGS exposes the module as
+> ``diff_surfel_rasterization`` instead, either alias it in your environment
+> (``import diff_surfel_rasterization as diff_gaussian_rasterization``) or
+> change the import line at the top of ``models/gs.py`` to match.
+
+Tested with PyTorch 2.1 / CUDA 11.8 on a single A100. Any GPU supported by the
+2DGS rasterizer should work.
 
 ---
 
@@ -100,6 +109,15 @@ python train.py -g 0 -t VIPL -rD 1
 
 # Resume / continue with the index already built
 python train.py -g 0 -t VIPL -rD 0
+```
+
+To launch one of the per-target trainer variants, run them as a module so
+Python finds the package layout:
+
+```bash
+python -m datasets.MMPD -g 0 -t MMPD -rD 0
+python -m datasets.Phys -g 0 -t Phys -rD 0
+# ...same for MR, UCLA, VV100
 ```
 
 Useful flags (see `utils.py` for the full list):
@@ -140,29 +158,39 @@ For BUAA / PURE / UBFC (BVP head): clip-level BVP `.mat` files are saved during 
 
 ```
 4D-rPPG/
-├── train.py            # multi-source DG training loop (target = leave-one-out)
-├── model.py            # BaseNet: ResNet18 encoder + physio head + 4D GS adapter
-├── gs.py               # GaussianRenderer wrapping diff_gaussian_rasterization
-├── graphics_utils.py   # 4D virtual camera (Inria gaussian-splatting helpers)
-├── MyDataset.py        # STMap dataset with spatial/temporal augmentation
-├── MyLoss.py           # P_loss3, SP_loss, ST_loss, M_loss, get_loss
-├── utils.py            # CLI args, Logger, MyEval (ME/STD/MAE/RMSE/MER/Pearson)
-├── Eval.py             # per-video aggregation + final HR metrics
-└── run.sh              # example launcher
+├── models/                  # network modules
+│   ├── model.py             # BaseNet: ResNet18 encoder + physio head + 4D GS adapter
+│   ├── gs.py                # GaussianRenderer wrapping the 2DGS rasterizer
+│   └── graphics_utils.py    # 4D virtual-camera math (R, t, projection)
+├── datasets/                # data loading + per-target trainer variants
+│   ├── MyDataset.py         # STMap dataset with spatial/temporal augmentation
+│   ├── MMPD.py / MR.py / Phys.py / UCLA.py / VV100.py
+│                            # per-target trainers — `python -m datasets.<name>`
+├── train.py                 # main entry — VIPL / V4V leave-one-out
+├── Eval.py                  # per-video aggregation + final HR metrics
+├── dataSort.py              # split per-clip BVP outputs into per-subject files
+├── MyLoss.py                # P_loss3, SP_loss, ST_loss, M_loss, get_loss
+├── utils.py                 # CLI args, Logger, MyEval (ME/STD/MAE/RMSE/MER/Pearson)
+├── run.sh                   # example launcher
+├── requirements.txt
+├── LICENSE
+└── README.md
 ```
 
 ---
 
 ## Citation
 
-If you find this work useful, please consider citing:
+If you find this work useful, please cite the ICCV 2025 paper:
 
 ```bibtex
-@inproceedings{rhythmgaussian,
-  title     = {RhythmGaussian: 4D Gaussian Representation for Remote Physiological Measurement},
-  author    = {Lu, Hao and others},
-  booktitle = {(to appear)},
-  year      = {2025}
+@InProceedings{Lu_2025_ICCV,
+    author    = {Lu, Hao and Zhang, Yuting and Tang, Jiaqi and Fu, Bowen and Ge, Wenhang and Wei, Wei and Wu, Kaishun and Chen, Yingcong},
+    title     = {RhythmGuassian: Repurposing Generalizable Gaussian Model For Remote Physiological Measurement},
+    booktitle = {Proceedings of the IEEE/CVF International Conference on Computer Vision (ICCV)},
+    month     = {October},
+    year      = {2025},
+    pages     = {20780-20790}
 }
 ```
 
@@ -189,7 +217,7 @@ We also build on prior cross-domain rPPG work; please cite NEST-rPPG and DOHA if
 ## Acknowledgements
 
 - The cross-domain rPPG benchmark, STMap pre-processing, and `L_physio` formulation follow [NEST-rPPG](https://github.com/EnVision-Research/NEST-rPPG).
-- The differentiable Gaussian rasterizer is the [Inria 3D Gaussian Splatting](https://github.com/graphdeco-inria/gaussian-splatting) implementation. `graphics_utils.py` is adapted from the same project.
+- The differentiable Gaussian rasterizer used for the 4D virtual camera is from [2D Gaussian Splatting (Huang et al.)](https://github.com/hbb1/2d-gaussian-splatting). `models/graphics_utils.py` reuses camera-math helpers from the original Inria 3D-GS project.
 - The activation choices for RGB / alpha / scale / rotation follow [LGM (Tang et al., 2024)](https://github.com/3DTopia/LGM).
 - The `L_st` formulation borrows from [ContrastPhys](https://github.com/zhaodongsun/contrast-phys).
 

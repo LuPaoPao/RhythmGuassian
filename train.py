@@ -12,9 +12,9 @@ from torch.utils.data import DataLoader
 from torch.autograd import Variable
 from torchvision import transforms
 
-import MyDataset
+from datasets import MyDataset
+from models import model
 import MyLoss
-import model
 import utils
 from utils import Logger, time_to_str
 from torchvision.utils import save_image

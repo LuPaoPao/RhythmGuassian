@@ -4,8 +4,8 @@ import torch.nn as nn
 import torch.nn.functional as F
 from torchvision import models
 import numpy as np
-from gs import GaussianRenderer
-from graphics_utils import getWorld2View2, getProjectionMatrix, focal2fov
+from .gs import GaussianRenderer
+from .graphics_utils import getWorld2View2, getProjectionMatrix, focal2fov
 
 # numpy printing options
 np.set_printoptions(threshold=np.inf)

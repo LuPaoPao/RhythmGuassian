@@ -9,7 +9,6 @@ import torchvision.transforms.functional as transF
 import torchvision.transforms as transforms
 from PIL import Image
 from numpy.fft import fft, ifft, rfft, irfft
-from torch.autograd import Variable
 import random
 normalize = transforms.Normalize(mean=[0.485, 0.456, 0.406],
                                      std=[0.229, 0.224, 0.225])
@@ -125,7 +124,6 @@ class Data_DG(Dataset):
         return gt, bvp
 
     def __getitem__(self, idx):
-        idx = idx
         img_name = 'STMap'
         STMap_name = self.STMap_Name
         nowPath = os.path.join(self.root_dir, self.datalist[idx])

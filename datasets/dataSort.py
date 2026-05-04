@@ -6,14 +6,9 @@ on any machine:
 - ``RPPG_RESULT_DIR`` — directory containing ``WAVE_ALL.mat`` and ``WAVE_PR_ALL.mat``.
 """
 
-import cv2
 import os
 import numpy as np
-import shutil
-import pandas as pd
 import scipy.io as scio
-from scipy import interpolate
-import scipy.io as io
 
 
 gt_name = 'BVP.mat'
@@ -55,8 +50,8 @@ for HR_index in range(pr.shape[0]):
         else:
             print(lastPath)
             print(PERSON)
-            io.savemat(savePath + str(PERSON) + 'pr_Wave.mat', {'Wave': pr_temp})
-            io.savemat(savePath + str(PERSON) + 'gt_Wave.mat', {'Wave': gt_temp})
+            scio.savemat(savePath + str(PERSON) + 'pr_Wave.mat', {'Wave': pr_temp})
+            scio.savemat(savePath + str(PERSON) + 'gt_Wave.mat', {'Wave': gt_temp})
             pr_temp = []
             gt_temp = []
             pr_temp.append(pr[HR_index, :])

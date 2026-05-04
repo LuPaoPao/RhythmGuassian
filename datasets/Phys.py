@@ -9,14 +9,11 @@ from datetime import datetime
 from timeit import default_timer as timer
 from torch import nn
 from torch.utils.data import DataLoader
-from torch.autograd import Variable
 from torchvision import transforms
 
 from datasets import MyDataset
-from models import model
-import MyLoss
-import utils
-from utils import Logger, time_to_str
+from models import MyLoss, model, utils
+from models.utils import Logger, time_to_str
 
 # Define your TARGET_DOMAIN and FILE_NAME mappings
 # Datasets supported as targets/sources; UCLA-rPPG is known to be noisy.

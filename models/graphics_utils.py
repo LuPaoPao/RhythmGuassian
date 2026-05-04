@@ -12,8 +12,7 @@
 import torch
 import math
 import numpy as np
-from typing import NamedTuple
-from typing import Tuple
+from typing import NamedTuple, Tuple
 from torch import Tensor
 
 class BasicPointCloud(NamedTuple):

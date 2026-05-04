@@ -1,11 +1,6 @@
-import cv2
 import os
 import numpy as np
-import shutil
-import pandas as pd
 import scipy.io as scio
-from scipy import interpolate
-import scipy.io as io
 import math
 
 
@@ -94,10 +89,10 @@ if __name__ == '__main__':
             gt_temp.append(gt[HR_index])
         lastPath = nowPath
 
-    io.savemat('gt_ps.mat', {'HR': gt_ps})
-    io.savemat('pr_ps.mat', {'HR': pr_ps})
-    io.savemat('HR_rel.mat', {'HR': gt_av})
-    io.savemat('HR_pr.mat', {'HR': pr_av})
+    scio.savemat('gt_ps.mat', {'HR': gt_ps})
+    scio.savemat('pr_ps.mat', {'HR': pr_ps})
+    scio.savemat('HR_rel.mat', {'HR': gt_av})
+    scio.savemat('HR_pr.mat', {'HR': pr_av})
     print(gt_av)
     print(pr_av)
     MyEval(gt_av, pr_av)

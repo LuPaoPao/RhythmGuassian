@@ -1,0 +1,32 @@
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.DS_Store
+.idea/
+.vscode/
+
+# Logs / checkpoints / results
+nohup.out
+Result_log/
+Result/
+Result_Model/
+Wave_sort/
+exp*/
+
+# Pretrained weights (download separately)
+*.pth
+*.pt
+*.safetensors
+*.bin
+
+# Data
+Data/
+data/
+STMap/
+*.mat
+*.zip
+*.tar.gz
+
+# Misc
+zzz.py

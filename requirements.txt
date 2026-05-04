@@ -1,0 +1,10 @@
+torch>=2.0
+torchvision
+numpy
+scipy
+opencv-python
+pillow
+pandas
+# Differentiable 3D Gaussian rasterizer:
+# install from https://github.com/graphdeco-inria/gaussian-splatting
+# diff-gaussian-rasterization
